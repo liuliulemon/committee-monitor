@@ -21,6 +21,7 @@ COMMITTEE_NEWS_URLS = [
 
 def get_article_links(url):
     links = []
+
     try:
         r = requests.get(url, timeout=10)
         soup = BeautifulSoup(r.text, "html.parser")
@@ -28,17 +29,36 @@ def get_article_links(url):
         for a in soup.find_all("a", href=True):
             href = a["href"]
 
-            # Keep only likely article links
-            if "http" not in href:
+            # Must be a full link
+            if not href.startswith("http"):
                 continue
 
-            if any(word in href.lower() for word in ["press", "news", "release", "202", "statement"]):
+            href_lower = href.lower()
+
+            # Skip generic section/index pages
+            if any(x in href_lower for x in [
+                "/press-releases",
+                "/newsroom",
+                "/news/",
+                "/press/"
+            ]):
+                continue
+
+            # Keep likely article links (more specific patterns)
+            if any(x in href_lower for x in [
+                "202",  # year-based URLs
+                "-release",
+                "-statement",
+                "-announces",
+                "-introduces"
+            ]):
                 links.append(href)
 
     except Exception as e:
         print(f"Error reading {url}: {e}")
 
-    return links[:10]  # limit to first 10 links
+    return list(set(links))[:10]  # remove duplicates
+
 
 
 def check_articles(links):
