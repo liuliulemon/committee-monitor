@@ -1,0 +1,26 @@
+name: Run Monitor
+
+on:
+  schedule:
+    - cron: '0 13 * * *'
+    - cron: '0 16 * * *'
+    - cron: '0 20 * * *'
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run script
+        run: python monitor.py
