@@ -1,7 +1,6 @@
 import os
 EMAIL_USER = os.environ["EMAIL_USER"]
 EMAIL_PASS = os.environ["EMAIL_PASS"]
-``
 
 import requests
 from bs4 import BeautifulSoup
