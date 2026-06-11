@@ -1,3 +1,8 @@
+import os
+EMAIL_USER = os.environ["EMAIL_USER"]
+EMAIL_PASS = os.environ["EMAIL_PASS"]
+``
+
 import requests
 from bs4 import BeautifulSoup
 import smtplib
@@ -38,11 +43,11 @@ def send_email(results):
 
     msg = MIMEText("\n".join(results))
     msg["Subject"] = "Congressional Committee NGO Alert"
-    msg["From"] = "YOUR_EMAIL@gmail.com"
+    msg["From"] = EMAIL_USER
     msg["To"] = "lliu@icnl.org"
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login("YOUR_EMAIL@gmail.com", "YOUR_APP_PASSWORD")
+        server.login(EMAIL_USER, EMAIL_PASS)
         server.send_message(msg)
 
 if __name__ == "__main__":
